@@ -204,6 +204,7 @@ def set_up_mx_build():
     cursor.execute('SELECT _ProductVersion FROM _MetaData LIMIT 1')
     record = cursor.fetchone()
     mendix_version = record[0]
+    mkdir_p('mxbuild')
     download_and_unpack(
         'http://cdn.mendix.com/runtime/mxbuild-{mendix_version}.tar.gz'.format(mendix_version=mendix_version),
         'mxbuild',
