@@ -176,9 +176,8 @@ def copy_buildpack_resources():
 
 
 if __name__ == '__main__':
-    for key in os.environ.keys():
-        logging.debug('environment variable ' + key)
-
+    logging.info('BUILD_DIR ' + BUILD_DIR)
+    logging.info('CWD ' + os.getcwd())
     preflight_check()
     set_up_directory_structure()
     set_up_java()
