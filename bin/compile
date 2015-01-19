@@ -175,8 +175,53 @@ def copy_buildpack_resources():
         )
 
 
+def get_mpr_file():
+    mprs = filter(lambda x: x.endswith('.mpr'), os.listdir('.'))
+    if len(mprs) > 0:
+        return mprs[0]
+    else:
+        return None
+
+
+def is_source_push():
+    if get_mpr_file() is not None:
+        return True
+    else:
+        return False
+
+
+def set_up_mono():
+    download_and_unpack(
+        'http://ci-labs-buildpack-downloads.s3.amazonaws.com/mono/lucid'
+        '/x86_64/mono-3.4.0_full.tar.gz',
+        '.'
+    )
+
+
+def set_up_mx_build():
+    import sqlite3
+    cursor = sqlite3.connect(get_mpr_file()).cursor()
+    cursor.execute('SELECT _ProductVersion FROM _MetaData LIMIT 1')
+    record = cursor.fetchone()
+    mendix_version = record[0]
+    download_and_unpack(
+        'http://cdn.mendix.com/runtime/mxbuild-{mendix_version}.tar.gz'.format(mendix_version=mendix_version),
+        'mxbuild',
+    )
+
+
+def run_mx_build():
+    subprocess.check_call([
+        'mono/bin/mono',
+        'mxbuild/modeler/mxbuild.exe',
+    ])
+
+
 if __name__ == '__main__':
-    subprocess.call(['find', '/', '-type', 'd'])
+    if is_source_push():
+        set_up_mono()
+        set_up_mx_build()
+        run_mx_build()
     preflight_check()
     set_up_directory_structure()
     set_up_java()
