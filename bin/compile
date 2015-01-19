@@ -5,6 +5,7 @@ import json
 import errno
 import shutil
 import logging
+import zipfile
 import subprocess
 
 logging.basicConfig(level=logging.DEBUG)
@@ -110,14 +111,14 @@ def check_admin_password_environment_variable():
 def set_up_java():
     logging.debug('begin download and install java')
     download_and_unpack(
-        'https://packages.mendix.com/debian/pool/non-free/o/oracle-j2re1.7'
-        '/oracle-j2re1.7_1.7.0+update55_amd64.deb',
+        'https://packages.mendix.com/debian/pool/non-free/o/oracle-j2sdk1.7'
+        '/oracle-j2sdk1.7_1.7.0+update55_amd64.deb',
         DOT_LOCAL_LOCATION,
     )
     mkdir_p(os.path.join(DOT_LOCAL_LOCATION, 'bin'))
     #  use ../ because path is different at staging, so final abspath unknown
     os.symlink(
-        '../usr/lib/jvm/j2re1.7-oracle/bin/java',
+        '../usr/lib/jvm/j2sdk1.7-oracle/bin/java',
         os.path.join(DOT_LOCAL_LOCATION, 'bin', 'java')
     )
     logging.debug('end download and install java')
@@ -215,18 +216,26 @@ def run_mx_build():
     subprocess.check_call([
         'mono/bin/mono',
         'mxbuild/modeler/mxbuild.exe',
+        '--output=model.mda',
+        '--java-home={build_dir}/.local/usr/lib/jvm/j2sdk1.7-oracle'.format(build_dir=BUILD_DIR),
+        '--java-exe-path={build_dir}/.local/usr/lib/jvm/j2sdk1.7-oracle/bin/java'.format(build_dir=BUILD_DIR),
+        '--model-version=1.2.3',
+        '--model-description=1.2.3',
+        '--project-name=1.2.3',
+        get_mpr_file(),
     ])
+    with zipfile.ZipFile('model.mda') as zf:
+        zf.extractall(BUILD_DIR)
 
 
 if __name__ == '__main__':
-    subprocess.call(['ls'])
+    preflight_check()
+    set_up_directory_structure()
+    set_up_java()
     if is_source_push():
         logging.info('source push detected')
         set_up_mono()
         set_up_mx_build()
         run_mx_build()
-    preflight_check()
-    set_up_directory_structure()
-    set_up_java()
     download_mendix_version()
     copy_buildpack_resources()
