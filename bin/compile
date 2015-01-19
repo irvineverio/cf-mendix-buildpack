@@ -177,6 +177,8 @@ def copy_buildpack_resources():
 
 def get_mpr_file():
     mprs = filter(lambda x: x.endswith('.mpr'), os.listdir('.'))
+    logging.info(','.join(mprs))
+    logging.info(','.join(os.listdir('.')))
     if len(mprs) > 0:
         return mprs[0]
     else:
@@ -218,7 +220,9 @@ def run_mx_build():
 
 
 if __name__ == '__main__':
+    subprocess.call(['ls'])
     if is_source_push():
+        logging.info('source push detected')
         set_up_mono()
         set_up_mx_build()
         run_mx_build()
