@@ -216,6 +216,7 @@ def run_mx_build():
     env = dict(os.environ)
     subprocess.check_call([
         'sed',
+        '-i',
         's|/app/vendor/mono/lib/libgdiplus.so|%s|g' % os.path.join(BUILDPACK_DIR, 'ld', 'libgdiplus.so'),
         'mono/etc/mono/config',
     ])
