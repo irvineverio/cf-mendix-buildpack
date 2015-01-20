@@ -214,7 +214,11 @@ def set_up_mx_build():
 
 def run_mx_build():
     env = dict(os.environ)
-    env['LD_LIBRARY_PATH'] = os.path.join(BUILDPACK_DIR, 'ld')
+    subprocess.check_call([
+        'sed',
+        's|/app/vendor/mono/lib/libgdiplus.so|%s|g' % os.path.join(BUILDPACK_DIR, 'ld', 'libgdiplus.so'),
+        'mono/etc/mono/config',
+    ])
     subprocess.check_call([
         'mono/bin/mono',
         'mxbuild/modeler/mxbuild.exe',
