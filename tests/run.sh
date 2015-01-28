@@ -4,10 +4,10 @@ set -e
 cf_org="mendix-rnd.com"
 cf_space="continuous-integration"
 cf_app_prefix="buildpack-testing"
-cf_app="$cf_app_prefix-$BUILDNUMBER"
+cf_app="${cf_app_prefix}-${BUILD_NUMBER}"
 cf_endpoint=api.run.pivotal.io
 cf_buildpack="https://github.com/mendix/cf-mendix-buildpack.git"
-cf_db="$cf_app-db"
+cf_db="${cf_app}-db"
 mx_admin_password="$(openssl rand -hex 10)@AA"
 cf_mda="tests/app/app.mda"
 cf_app_domain="cfapps.io"
