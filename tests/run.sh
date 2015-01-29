@@ -30,6 +30,11 @@ tests_init() {
         exit 1
     fi
 
+    if [ -z "$BUILD_NUMBER" ] ; then
+        echo "BUILD_NUMBER environment variable has to be set!"
+        exit 1
+    fi
+
     if [ ! -d "lib/mxplient" ] ; then
         git clone gitlab@gitlab.srv.hq.mendix.net:rnd/mxplient.git lib/mxplient
     else
