@@ -491,6 +491,9 @@ def get_client_certificates():
     if len(files) > 0:
         config['ClientCertificates'] = ','.join(files)
         config['ClientCertificatePasswords'] = ','.join(passwords)
+    if len(pins) > 0:
+        config['ClientCertificateUsages'] = pins
+    logger.info(config)
     return config
 
 
