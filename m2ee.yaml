@@ -18,6 +18,7 @@ m2ee:
  preserve_environment: true
 
  javaopts: [
+    "-Djavax.net.debug=all",
     "-Dfile.encoding=UTF-8",
     "-Djava.io.tmpdir=BUILD_PATH/data/tmp",
     "-XX:OnError=kill -s USR1 PYTHONPID",
