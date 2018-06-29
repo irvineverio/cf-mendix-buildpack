@@ -491,7 +491,6 @@ def get_client_certificates():
     if len(files) > 0:
         config['ClientCertificates'] = ','.join(files)
         config['ClientCertificatePasswords'] = ','.join(passwords)
-        config['WebServiceClientCertificates'] = pins
     return config
 
 
