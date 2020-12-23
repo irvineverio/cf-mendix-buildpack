@@ -11,6 +11,8 @@ default_env = {
     "DT_TENANT": None,  # required, environment ID (uuid format)
     # "DT_PAAS_TOKEN": None,  # required
     # "DT_SAAS_URL": None,  # required
+    "DT_LOGS_LEVEL": None, # optional, accepted values: CRITICAL, ERROR, WARNING, INFO, DEBUG, TRACE
+    "DT_LOGS_PATH": "/tmp/app.logs", # optional, path to app logs. Must be writable by app process
     "DT_LOGSTREAM": "stdout",
     "DT_NETWORK_ZONE": None,  # optional, not sure what this means :D
     "DT_CUSTOM_PROP": None,  # optional metadata e.g. Department=Acceptance Stage=Sprint
@@ -80,6 +82,23 @@ def update_config(m2ee, app_name):
     )
     m2ee.config._conf["m2ee"]["javaopts"].append("-Xshare:off")
 
+    # logs shipping
+    logs_level = get_logs_level()
+    if logs_level:
+        log_path = os.environ.get("DT_LOGS_PATH", "/tmp/out.log")
+        util.lazy_remove_file(log_path)
+        os.mkfifo(log_path)
+        m2ee.config._conf["logging"].append(
+            {
+                "type": "file",
+                "name": "dynatracesubscriber",
+                "autosubscribe": logs_level,
+                "filename": log_path,
+                "max_size": 1125899906842624,
+                "max_rotation": 1,
+            }
+        )
+
 
 def get_manifest():
     with open(".local/manifest.json", "r") as f:
@@ -108,3 +127,6 @@ def get_agent_path():
 
 def is_enabled():
     return "DT_PAAS_TOKEN" in os.environ.keys()
+
+def get_logs_level():
+    return os.environ.get("DT_LOGS_LEVEL", None)
