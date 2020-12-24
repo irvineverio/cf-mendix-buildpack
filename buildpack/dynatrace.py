@@ -87,7 +87,7 @@ def update_config(m2ee, app_name):
     if logs_level:
         log_path = os.environ.get("DT_LOGS_PATH", "/tmp/out.log")
         util.lazy_remove_file(log_path)
-        os.mkfifo(log_path)
+        #os.mkfifo(log_path)
         m2ee.config._conf["logging"].append(
             {
                 "type": "file",
