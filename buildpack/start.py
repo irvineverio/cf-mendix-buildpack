@@ -19,6 +19,7 @@ from buildpack import (
     nginx,
     runtime,
     telegraf,
+    openmetrics,
     util,
 )
 
@@ -163,6 +164,7 @@ if __name__ == "__main__":
         # Start components and runtime
         telegraf.run()
         datadog.run(model_version, runtime_version)
+        openmetrics.run(m2ee, port=util.get_metrics_port())
         metering.run()
         nginx.run()
         runtime.run(m2ee)
