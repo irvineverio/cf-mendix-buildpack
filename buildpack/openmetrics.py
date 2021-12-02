@@ -30,8 +30,8 @@ class DummyMetricsEmitterThread(BaseMetricsEmitterThread):
     @property
     def _select_stats_to_emit(self):
         selected_stats = [
-            self._inject_database_stats,
-            self._inject_storage_stats,
+            #self._inject_database_stats,
+            #self._inject_storage_stats,
             self._inject_health,
         ]
         selected_stats.append(self._inject_m2ee_stats)
