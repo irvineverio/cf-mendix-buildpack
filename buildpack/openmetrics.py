@@ -45,9 +45,12 @@ class OpenMetrics(BaseHTTPRequestHandler):
     def _send_response(self, data, status=200):
             self.send_response(status)
             self.send_header("Content-Type", self.CONTENT_TYPE)
+            self.send_header("Content-length", len(data))
             self.end_headers()
+
             if data:
                 self.wfile.write(bytes(data, "utf-8"))
+                self.wfile.flush()
 
     def do_GET(self):
         try:
@@ -57,7 +60,6 @@ class OpenMetrics(BaseHTTPRequestHandler):
                 self._send_response("".join(metrics))
             else:
                 self._send_response(None, status=404)
-            self.finish()
         except Exception as e:
             logging.exception("OpenMetrics general error", e)
 
@@ -73,6 +75,7 @@ class OpenMetrics(BaseHTTPRequestHandler):
         metrics = []
         for (name, labels, value) in flatten(stats):
             metrics.append(self._single_metric(name=name, labels=labels, value=value))
+        metrics.append("# EOF\n")
         return metrics
 
     def _single_metric(self, help="Not yet defined", type="gauge", name="unnamed", labels={}, value=0):
@@ -91,7 +94,6 @@ class OpenMetrics(BaseHTTPRequestHandler):
         return f"""# HELP {name} {help}
 # TYPE {name} {type}
 {name}{labels_string} {value}
-# EOF
 """
 
 
