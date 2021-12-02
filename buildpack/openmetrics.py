@@ -57,6 +57,7 @@ class OpenMetrics(BaseHTTPRequestHandler):
             self._send_response("".join(metrics))
         else:
             self._send_response(None, status=404)
+        self.finish()
 
     def _get_metrics(self):
         try:
@@ -66,6 +67,7 @@ class OpenMetrics(BaseHTTPRequestHandler):
             logging.exception("OpenMetrics: error while gathering metrics")
             stats = {}
             #stats = {'database': {'indexes_size': 1998848, 'tables_size': 11436911, 'xact_commit': 16712, 'xact_rollback': 7, 'tup_inserted': 4297, 'tup_updated': 203, 'tup_deleted': 5, 'tcp_latency': '0.78'}, 'storage': {'get_number_of_files': 0}, 'health': {'health': 7, 'diagnosis': '', 'response': {'feedback': {'health': 'unknown'}, 'result': 0}}, 'mendix_runtime': {'sessions': {'user_sessions': {}, 'named_users': 4, 'anonymous_sessions': 0, 'named_user_sessions': 0}, 'cache': {'total_count': 0}, 'memory': {'used_nonheap': 117452288, 'init_nonheap': 7667712, 'max_nonheap': 780140544, 'committed_nonheap': 125919232, 'init_heap': 536870912, 'memorypools': [{'is_heap': False, 'usage': 1247104, 'name': "CodeHeap 'non-nmethods'", 'index': 0}, {'is_heap': False, 'usage': 87787976, 'name': 'Metaspace', 'index': 1}, {'is_heap': False, 'usage': 12541824, 'name': "CodeHeap 'profiled nmethods'", 'index': 2}, {'is_heap': False, 'usage': 12776776, 'name': 'Compressed Class Space', 'index': 3}, {'is_heap': True, 'usage': 15728640, 'name': 'G1 Eden Space', 'index': 4}, {'is_heap': True, 'usage': 39891968, 'name': 'G1 Old Gen', 'index': 5}, {'is_heap': True, 'usage': 8388608, 'name': 'G1 Survivor Space', 'index': 6}, {'is_heap': False, 'usage': 3098368, 'name': "CodeHeap 'non-profiled nmethods'", 'index': 7}], 'committed_heap': 536870912, 'max_heap': 536870912, 'used_heap': 64009216, 'code': 16887296, 'permanent': 87787976, 'eden': 15728640, 'survivor': 8388608, 'tenured': 39891968, 'nativecode': 20111360, 'jar': 0, 'javaheap': 472861696, 'codecache': 16887296, 'nativemem': 196739072, 'other': 0, 'stacks': 4440064, 'total': 426938368}, 'languages': ['en_US'], 'entities': 64, 'requests': {'': 0, 'ws/': 0, 'file': 0, 'ws-doc/': 0, 'manifest.webmanifest': 0, 'api-doc/': 0, 'api/': 0, 'rest-doc/': 0, 'odata-doc/': 0, 'xas/': 0, 'p/': 0}, 'connectionbus': {'select': 93, 'insert': 1, 'update': 3, 'delete': 0, 'transaction': 38}, 'jetty': {'current_connections': 0, 'max_connections': 0, 'idle_timeout': 30000, 'connected_end_points': 0, 'max_idle_time_s': 30, 'requests_active_max': 0}, 'threadpool': {'idle_threads': 6, 'stop_timeout': 30000, 'queue_size': 0, 'max_threads': 254, 'threads_priority': 5, 'threads': 8, 'max_queued': 0, 'idle_timeout': 60000, 'min_threads': 8, 'max_idle_time_s': 60, 'max_stop_time_s': 30, 'threadpool_size': 8, 'active_threads': 2}, 'threads': 50, 'critical_logs_count': 0}}
+        logging.info(stats)
 
         metrics = []
         for (name, labels, value) in flatten(stats):
