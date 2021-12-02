@@ -54,7 +54,7 @@ class OpenMetrics(BaseHTTPRequestHandler):
             if self.path == "/metrics":
                 metrics = []
                 metrics.extend(self._get_metrics())
-                self._send_response("\n".join(metrics))
+                self._send_response("".join(metrics))
             else:
                 self._send_response(None, status=404)
             self.finish()
@@ -73,7 +73,6 @@ class OpenMetrics(BaseHTTPRequestHandler):
         metrics = []
         for (name, labels, value) in flatten(stats):
             metrics.append(self._single_metric(name=name, labels=labels, value=value))
-        metrics.append("")
         return metrics
 
     def _single_metric(self, help="Not yet defined", type="gauge", name="unnamed", labels={}, value=0):
@@ -91,7 +90,9 @@ class OpenMetrics(BaseHTTPRequestHandler):
         # ref: https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md
         return f"""# HELP {name} {help}
 # TYPE {name} {type}
-{name}{labels_string} {value}"""
+{name}{labels_string} {value}
+# EOF
+"""
 
 
 def flatten(d, sep="_"):
