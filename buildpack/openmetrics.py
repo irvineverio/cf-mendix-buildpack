@@ -41,7 +41,11 @@ class DummyMetricsEmitterThread(BaseMetricsEmitterThread):
 class OpenMetrics(BaseHTTPRequestHandler):
 
     CONTENT_TYPE = str('application/openmetrics-text; version=1.0.0; charset=utf-8')
-
+    
+    def log_message(self, format, *args):
+        # blackhole this because log lines are flushed in batches and it's confusing
+        pass
+    
     def _send_response(self, data, status=200):
             self.send_response(status)
             self.send_header("Content-Type", self.CONTENT_TYPE)
