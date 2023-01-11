@@ -3,14 +3,14 @@ import os
 
 from buildpack import util
 
-APPDYNAMICS_VERSION = "20.3.0.29587"
+APPDYNAMICS_VERSION = "22.1.0.33445"
 
 
 def stage(destination_path, cache_path):
     if appdynamics_used():
         util.download_and_unpack(
             util.get_blobstore_url(
-                "/mx-buildpack/appdynamics/appdynamics-agent-{}.zip".format(
+                "/mx-buildpack/appdynamics/appdynamics-agent-1.8-{}.zip".format(
                     APPDYNAMICS_VERSION
                 )
             ),
