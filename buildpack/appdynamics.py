@@ -26,13 +26,13 @@ def update_config(m2ee, app_name):
     m2ee.config._conf["m2ee"]["javaopts"].append(
         "-javaagent:{path}".format(
             path=os.path.abspath(
-                ".local/ver" + APPDYNAMICS_VERSION + "/javaagent.jar"
+                ".local/ver" + "23.2.0.34668" + "/javaagent.jar"
             )
         )
     )
     m2ee.config._conf["m2ee"]["javaopts"].append(
         "-Dappagent.install.dir={path}".format(
-            path=os.path.abspath(".local/ver" + APPDYNAMICS_VERSION)
+            path=os.path.abspath(".local/ver" + "23.2.0.34668")
         )
     )
     APPDYNAMICS_AGENT_NODE_NAME = "APPDYNAMICS_AGENT_NODE_NAME"
